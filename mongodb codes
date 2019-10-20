@@ -1,0 +1,7 @@
+db.Info_store.insert([
+{title:"manufacture", manufacture_name:"M1", manufacture_location:"Taubenfeld" },
+{ title:"supplier", supplier_name:"Netto", supplier_location:"Mannheimer strasse" },
+{ title:"supplier", supplier_name:"Rewe", supplier_location:"Wieblingen" },
+{ title:"warehouse", warehouse_name:"Netto Warehouse", warehouse_location:"Aldstadt" },
+{title:"warehouse", warehouse_name:"Rewe Warehouse", warehouse_location:"Bismarckplatz" }
+])
