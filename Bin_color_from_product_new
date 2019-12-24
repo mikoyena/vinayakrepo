@@ -11,5 +11,5 @@ for index,row in df.iterrows():                         # iterate over each inde
     val = row['Bin']
     r.set(key, value=val)                               # Execute the Redis SET command to store the data in Redis
 
-
+#end of Code
 
