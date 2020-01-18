@@ -11,5 +11,17 @@ for index,row in df.iterrows():                         # iterate over each inde
     val = row['Bin']
     r.set(key, value=val)                               # Execute the Redis SET command to store the data in Redis
 
-#end of Code
+# provide the Product and get the Bin color
+print("Please either enter the material name to get the color of the bin or enter QUIT to quit from the window")
+
+product = ""
+while product != "QUIT":
+    product = input("Please provide the material to get the color of the bin: ")
+    if product == "QUIT":
+        break
+    else:
+        print(r.get(product))
+
+
+
 
