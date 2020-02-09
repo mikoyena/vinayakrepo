@@ -25,6 +25,8 @@ while product != "QUIT":
     	product = r.get(product)
     	if product == None:
     		print("Please enter a valid material name!")
+    	elif product.decode() == "No Bin":
+    		print("The entered product does not have any specific colored bin associated with it")
     	else:
     		print("The entered material should go into "+product.decode()+" colored bin")
 
