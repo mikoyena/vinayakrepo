@@ -31,6 +31,7 @@ while product != "QUIT":
     		print("The entered material should go into "+product.decode()+" colored bin")
 
         
+        
 
 
 
