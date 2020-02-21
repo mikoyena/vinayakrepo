@@ -9,7 +9,7 @@ collectioncompanies = db["Companies"]
 graph = Graph(host='localhost', port=7687, password="davidluiz#32")
 
 # function to get the inputted company details and logic to calculate distances
-def get_city_comp_details(cityname):
+def get_nearest_comp_details(cityname):
     citylist=[]
     distlist =[]
     # preprae the query to fetch the list of water processing/water treatment companies located in all the cities
@@ -35,7 +35,8 @@ def get_city_comp_details(cityname):
     distance = min(distlist)
     nearestcity = citylist[indx]
     print("Nearest city: "+nearestcity+ ", "+"distance: "+str(distance)+" km")
-
+    
+    # print out the nearest company details
     pipeline=[
              {"$match":{"City":nearestcity}},    
              {"$match":{"Purpose":{"$in":["Water Treatment","Water Processing"]}}},
@@ -55,7 +56,7 @@ def get_city_comp_details(cityname):
 
 # end of function here
 
-# function to take inout city from the user
+# function to take input city from the user
 def inpcity():
     flag = ""
     while flag != "quit" :
@@ -72,7 +73,9 @@ def inpcity():
             flag = "quit"
             inpcity = docu['City']
 
-
+    
+    # run the cypher query to check if the inputted city has any water processing/water treatment companies.
+    # If not found within same city call the function get_nearest_comp_details() and pass the inputted city parameter to it.
     query ="""
     MATCH (a:City {name:$inpcity})--(b:Company) return b.name as companyname, b.id as companyid
     """
@@ -111,7 +114,7 @@ def inpcity():
             if answer != "Y" and answer != "N":
                 print("Please enter a valid input (Y or N)")
             if answer == "Y":
-                get_city_comp_details(inpcity)
+                get_nearest_comp_details(inpcity)
                 break        
             if answer == "N":
                 break
