@@ -20,7 +20,7 @@ def loaddata():
                       , header=0
                       , skipfooter=1)
 
-  fn = lambda row: str(row.CaseID) + '_' + str(row.City).replace(' ','_') + '_' + str(row.Date) # define a function for the new column
+  fn = lambda row: str(row.CaseID) + '_' + str(row.City).replace(' ','_') + '_' + str(row.Date) # define an anonymous function for the new column custom_cityid
   col = data.apply(fn, axis=1) # get column data with an index
   data = data.assign(custom_cityid=col.values) # assign values to column 'custom_cityid'
 
