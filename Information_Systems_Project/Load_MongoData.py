@@ -14,18 +14,19 @@ collectionwastemanagement = db["wastemanagementCollection"]
 collectionSolidWaste = db["SolidWaste"]
 
 def loaddata():
-  data = pd.read_excel('Data.xlsx'
+
+  data = pd.read_excel('FinalCityDataxl.xlsx'
                       # , sheet_name='2008'
                       , skiprows=1
                       , header=0
                       , skipfooter=1)
+
   fn = lambda row: str(row.CaseID) + '_' + str(row.City).replace(' ','_') + '_' + str(row.Date) # define a function for the new column
-
-
   col = data.apply(fn, axis=1) # get column data with an index
   data = data.assign(custom_cityid=col.values) # assign values to column 'custom_cityid'
 
-  citiesDF = data.filter(['custom_cityid'
+  citiesDF = data.filter(['Date'
+  , 'custom_cityid'
   , 'City'
   , 'CityPopulation'
   , 'UrbanPopulation(%of total population)'
@@ -77,13 +78,29 @@ def loaddata():
     collectionwastemanagement.insert_many(wastemanagementDF.to_dict('records'))
     collectionSolidWaste.insert_many(solidwasteDF.to_dict('records'))
 
-    print("Data was successfully inserted into the respective mongodb collections")
+    print("Data was successfully inserted into the respective mongodb collections"+"\n")
   except Exception as e:
     print(e)
+    
+# define a function to query the mongo db database by passing column_name as the perameter
+def querydata(column_name):
+	yearlist = [2008,2009]
+	for year in yearlist:
+		pipeline = [{"$match":{"Date":year}},
+		            {"$sort":{column_name:-1}},
+		            {"$project":{"_id":0,"City":1,column_name:2,"Date":3}},
+		            {"$limit":3}
+               ]
+
+		docu = collectionCity.aggregate(pipeline)
+		for item in docu:
+			print("City: "+item['City'])
+			print(column_name + ":" +str(item[column_name]))
+			print("Date: "+str(item['Date'])+"\n")
 
 def displaydata():
   
-# make a small command i=line interface to accept input as the option and display the output
+# make a small command line interface to accept input as the option and display the output
   print("Please select from the below options(1-7) to get the list of top 3 Cities based on the criteria provided: ")
   print(" 1.Top 3 cities based on the Waste Generation Rate(kg/person/day)")
   print(" 2.Top 3 Cities based on the Avg. GDP in $/person/year")
@@ -96,66 +113,48 @@ def displaydata():
   input_num = ""
 
   while input_num != "QUIT":
-      input_num = (input("Please enter your choice from 1-7 or enter QUIT to quit the window: "))
-      if input_num == "QUIT":
-          break
+  	input_num = (input("Please enter your choice from 1-7 or enter QUIT to quit the window: "))
+  	if input_num == "QUIT":
+  		break
 
-      elif input_num == "1":
-          mydoc = collectionCity.find({}, {"_id": 0, "City": 1, "WasteGenerationrate(kg/person/day)": 2}).sort(
-          "WasteGenerationrate(kg/person/day)", pymongo.DESCENDING).limit(3)
-          for item in mydoc:
-              print(item['City'],item['WasteGenerationrate(kg/person/day)'])
+  	elif input_num == "1":
+  		column = "WasteGenerationrate(kg/person/day)"
+  		querydata(column)
 
-      elif input_num == "2":
-          mydoc = collectionCity.find({}, {"_id": 0, "City": 1, "Avg GDP(US$/person/year)": 2}).sort(
-              "Avg GDP(US$/person/year)", pymongo.DESCENDING).limit(3)
-          for item in mydoc:
-              print(item['City'],item['Avg GDP(US$/person/year)'])
+  	elif input_num == "2":
+  		column = "Avg GDP(US$/person/year)"
+  		querydata(column)
 
-      elif input_num == "3":
-          mydoc = collectionCity.find({}, {"_id": 0, "City": 1, "CO2emission(capita)": 2}).sort(
-              "CO2emission(capita)", pymongo.DESCENDING).limit(3)
-          for item in mydoc:
-              print(item['City'],item['CO2emission(capita)'])
+  	elif input_num == "3":
+  		column = "CO2emission(capita)"
+  		querydata(column)
 
-      elif input_num == "4":
-          mydoc = collectionCity.find({}, {"_id": 0, "City": 1, "Ecologicalfootprint(gha/capita)": 2}).sort(
-              "Ecologicalfootprint(gha/capita)", pymongo.DESCENDING).limit(3)
-          for item in mydoc:
-              print(item['City'],item['Ecologicalfootprint(gha/capita)'])
+  	elif input_num == "4":
+  		column = "Ecologicalfootprint(gha/capita)"
+  		querydata(column)
 
-      elif input_num == "5":
-          mydoc = collectionCity.find({}, {"_id": 0, "City": 1, "Density(persons/km2)": 2}).sort(
-              "Density(persons/km2)", pymongo.DESCENDING).limit(3)
-          for item in mydoc:
-              print(item['City'],item['Density(persons/km2)'])
+  	elif input_num == "5":
+  		column = "Density(persons/km2)"
+  		querydata(column)
 
-      elif input_num == "6":
-          mydoc = collectionCity.find({}, {"_id": 0, "City": 1, "LifeExpectancyboth(years)": 2}).sort(
-              "LifeExpectancyboth(years)", pymongo.DESCENDING).limit(3)
-          for item in mydoc:
-              print(item['City'],item['LifeExpectancyboth(years)'])
+  	elif input_num == "6":
+  		column = "LifeExpectancyboth(years)"
+  		querydata(column)
 
-      elif input_num == "7":
-          mydoc = collectionCity.find(
-              {}, {"_id": 0, "City": 1,
-                  "AdultMortalityrate(probability of dying between the ages of 15 and 60 per 1000 adults)": 2}).sort(
-                  "AdultMortalityrate(probability of dying between the ages of 15 and 60 per 1000 adults)",
-                  pymongo.DESCENDING).limit(3)
-          for item in mydoc:
+  	elif input_num == "7":
+  		column = "AdultMortalityrate(probability of dying between the ages of 15 and 60 per 1000 adults)"
+  		querydata(column)
 
-            print(item['City'],item['AdultMortalityrate(probability of dying between the ages of 15 and 60 per 1000 adults)'])
+  	elif input_num != ["1","2","3","4","5","6","7"]:
+  		print("Invalid number entered !")
 
-      elif input_num != ["1","2","3","4","5","6","7"]:
-          print("Invalid number entered !")
-
-      else:
-          break
+  	else:
+  		break
 
 if __name__ == '__main__':
   loaddata()
   displaydata()
-
+ 
 
 
 
