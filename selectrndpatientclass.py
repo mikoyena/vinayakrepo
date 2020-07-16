@@ -1,3 +1,5 @@
+# program to choose 1 random recovered patients in every 5 recoverd  patients.
+
 import random
 import datetime
 
