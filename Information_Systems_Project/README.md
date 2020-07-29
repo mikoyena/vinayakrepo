@@ -1,4 +1,11 @@
-**####Project Requirement**
-Created a portal empowered by a data model which gives an overview about the waste management system followed by a country.
+**Project Requirement**
+Create a small portal empowered with a Data Model using NoSQL Database technologies and Python as an application layer.
+
+**Technologies Used**
+
+Python, MongoDB, Neo4j, Redis
+
+**Project Brief**
+
 Designed and deployed a total of 15 user stories on the data model backup up by the NoSQL database technologies like MongoDB, Neo4j and RedisImplemented Routing and Spatial querying in the Neo4j Graph Database using Python programming language.
 
