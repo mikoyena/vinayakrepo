@@ -1,1 +1,1 @@
-**This directory holds the data visualizations performed in Tableau and Power BI**
+**This directory holds the Interactive Dashboards created using Tableau Desktop and Microsoft Power BI**
